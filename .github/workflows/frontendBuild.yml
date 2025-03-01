@@ -1,0 +1,46 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: 'npm'
+
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm install
+
+    - name: Run frontend linting
+      working-directory: ./frontend
+      run: npm run lint
+
+    - name: Run frontend tests
+      working-directory: ./frontend
+      run: npm test
+
+    - name: Build frontend
+      working-directory: ./frontend
+      run: npm run build
+
+    - name: Verify frontend build
+      working-directory: ./frontend
+      run: |
+        if [ -d "build" ]; then
+          echo "Frontend build successful"
+        else
+          echo "Frontend build failed"
+          exit 1
+        fi
