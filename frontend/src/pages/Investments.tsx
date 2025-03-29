@@ -199,4 +199,3 @@ export function Investments() {
       </div>
     </div>
   );
-}
