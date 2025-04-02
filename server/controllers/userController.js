@@ -47,11 +47,14 @@ exports.login = async (req, res) => {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
 
-    const payload = { user: { id: user.id } };
-    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+    //const payload = { user: { id: user.id } };
+    jwt.sign({ user: { _id: user.id } }, process.env.JWT_SECRET, { expiresIn: '6h' }, (err, token) => {
       if (err) throw err;
-      res.json({ token });
-    });
+      res.json({
+          token,
+          user: { _id: user.id }
+      });
+  });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -149,7 +152,7 @@ exports.getUserSummary = async (req, res) => {
           })
       );
 
-      res.json(groupBalances);
+      res.json({groupBalances,"name":user.name});
   } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');

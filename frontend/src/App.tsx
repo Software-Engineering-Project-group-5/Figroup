@@ -6,6 +6,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { Groups } from "./pages/Groups";
 import { Investments } from "./pages/Investments";
 import { MainLayout } from "./layouts/MainLayout";
+import { GroupDetails } from "./pages/GroupDetails";
 export function App() {
   // For mock data purposes, we'll assume the user is not logged in initially
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -41,6 +42,7 @@ export function App() {
             element={isLoggedIn ? <Investments /> : <Navigate to="/login" replace />}
           />
           <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/groups/:groupId" element={<GroupDetails />} />
         </Route>
       </Routes>
     </BrowserRouter>
