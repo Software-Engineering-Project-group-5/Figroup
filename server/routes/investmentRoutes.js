@@ -28,4 +28,9 @@ router.post('/:investment_id/contributions', auth, investmentController.addContr
 // @access  Private
 router.get('/:investment_id/returns', auth, investmentController.getInvestmentReturns);
 
+// @route   GET /api/investments/stock
+// @desc    Get sotcks
+// @access  Private
+router.get('/stock/', auth, investmentController.getCompanyDetails);
+
 module.exports = router;

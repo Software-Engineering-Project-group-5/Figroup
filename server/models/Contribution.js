@@ -6,6 +6,7 @@ const contributionSchema = new Schema({
   user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   amount: { type: Number, required: true },
   created_at: { type: Date, default: Date.now },
+  group_id: { type: Schema.Types.ObjectId, ref: 'Group', required: true },
 });
 
 module.exports = mongoose.model('Contribution', contributionSchema);

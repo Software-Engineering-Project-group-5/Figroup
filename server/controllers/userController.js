@@ -4,6 +4,8 @@ const Expense = require('../models/Expense');
 const Balance = require('../models/Balance')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Contribution = require('../models/Contribution');
+const Investment = require('../models/Investment');
 
 // Register a new user
 exports.register = async (req, res) => {
@@ -38,6 +40,7 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
   try {
     let user = await User.findOne({ email });
+    console.log(user);
     if (!user) {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
@@ -156,5 +159,41 @@ exports.getUserSummary = async (req, res) => {
   } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
+  }
+};
+
+exports.getInvestmentSummary = async (req, res) => {
+  try{
+    const user = User.findById(req.params.user_id);
+    if(!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    const groups = await Group.find({ members: user._id, type: "INVESTMENTS" });
+    console.log(groups);
+
+    const groupContributions = await Promise.all(
+      groups.map(async (group) => {
+          // Get balance document for the user in this group
+          const investment = await Investment.findOne({group_id: group._id});
+          const contribution = await Contribution.findOne({ group_id: group._id, user_id: user.id })
+
+          let total_invested = investment.total_invested;
+          
+          let user_contribution = contribution.amount;
+
+          return {
+            group_id : group._id,
+            group_name : group.name,
+            total_invested : total_invested,
+            amount_contributed : user_contribution
+          };
+      })
+  );
+
+    res.json({groupContributions,"name":user.name});
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 };
