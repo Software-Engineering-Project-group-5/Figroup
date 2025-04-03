@@ -33,4 +33,9 @@ router.put('/:user_id', auth, userController.updateUser);
 // @access  Private
 router.get('/:user_id/summary', auth, userController.getUserSummary);
 
+// @route   GET /api/users/{user_id}/investments/summary
+// @desc    Get user investments summary (total invested, contribution to invested breakdown)
+// @access  Private
+router.get('/:user_id/investments/summary', auth, userController.getInvestmentSummary);
+
 module.exports = router;
