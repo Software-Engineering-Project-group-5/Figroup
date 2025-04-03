@@ -163,35 +163,52 @@ exports.getUserSummary = async (req, res) => {
 };
 
 exports.getInvestmentSummary = async (req, res) => {
-  try{
-    const user = User.findById(req.params.user_id);
-    if(!user) {
+  try {
+    // Add await to properly resolve the user query
+    const user = await User.findById(req.params.user_id);
+    if (!user) {
       return res.status(404).json({ msg: 'User not found' });
     }
 
-    const groups = await Group.find({ members: user._id, type: "INVESTMENTS" });
-    console.log(groups);
-
+    // Find all investment groups the user is a member of
+    const groups = await Group.find({ members: user._id, type: "INVESTMENT" });
+    
     const groupContributions = await Promise.all(
       groups.map(async (group) => {
-          // Get balance document for the user in this group
-          const investment = await Investment.findOne({group_id: group._id});
-          const contribution = await Contribution.findOne({ group_id: group._id, user_id: user.id })
-
-          let total_invested = investment.total_invested;
-          
-          let user_contribution = contribution.amount;
-
-          return {
-            group_id : group._id,
-            group_name : group.name,
-            total_invested : total_invested,
-            amount_contributed : user_contribution
-          };
+        // Get all investments for this group
+        const investments = await Investment.find({ group_id: group._id });
+        
+        // Calculate total invested across all investments in this group
+        const totalGroupInvestment = investments.reduce((total, investment) => {
+          return total + investment.total_invested;
+        }, 0);
+        
+        // Get all contributions by this user for this group
+        const userContributions = await Contribution.find({ 
+          group_id: group._id, 
+          user_id: user._id // Fixed to use user._id consistently
+        });
+        
+        // Calculate total contributed by this user
+        const userTotalContribution = userContributions.reduce((total, contribution) => {
+          return total + contribution.amount;
+        }, 0);
+        
+        return {
+          group_id: group._id,
+          group_name: group.name,
+          total_group_investment: totalGroupInvestment,
+          user_contribution: userTotalContribution
+        };
       })
-  );
-
-    res.json({groupContributions,"name":user.name});
+    );
+    
+    res.json({
+      user_id: user._id,
+      name: user.name,
+      groupContributions: groupContributions
+    });
+    
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

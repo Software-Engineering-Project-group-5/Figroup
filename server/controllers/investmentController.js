@@ -18,7 +18,6 @@ exports.createInvestment = async (req, res) => {
       return res.status(404).json({ msg: 'Group not found' });
     }
     const stock_value = await stock_fetcher_instance.getStockPrice(stock_symbol);
-    console.log(stock_value);
 
     const investment = new Investment({
       group_id,
@@ -41,15 +40,6 @@ exports.createInvestment = async (req, res) => {
       await contribution.save();
     }
 
-    for (const member of group.members) {
-      const contribution = new Contribution({
-        investment_id: investment._id,
-        user_id: member.toString(),
-        amount: total_amount/group.members.length,
-        group_id: group_id,
-      });
-      await contribution.save();
-    }
     group.investments.push(investment._id);
     await group.save();
 
