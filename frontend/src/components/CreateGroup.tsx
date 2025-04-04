@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 interface CreateGroupPopupProps {
   onClose: () => void;
+  type: string
 }
 
-export function CreateGroupPopup({ onClose }: CreateGroupPopupProps) {
+export function CreateGroupPopup({ onClose, type }: CreateGroupPopupProps,) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -29,7 +30,7 @@ export function CreateGroupPopup({ onClose }: CreateGroupPopupProps) {
         'http://localhost:5001/api/groups/',
         {
           name,
-          type: "EXPENSE",
+          type: type,
           admin_id: currentUserId
         },
         { headers: { 'x-auth-token': token } }
@@ -37,7 +38,12 @@ export function CreateGroupPopup({ onClose }: CreateGroupPopupProps) {
 
       // Redirect to the newly created group
       if (response.data && response.data.group_id) {
-        navigate(`/groups/${response.data.group_id}`);
+        if(type == "EXPENSE") {
+          navigate(`/groups/${response.data.group_id}`);
+        }
+        else {
+          navigate(`/investments/${response.data.group_id}`);
+        }
       } else {
         throw new Error('Group created but no ID returned');
       }

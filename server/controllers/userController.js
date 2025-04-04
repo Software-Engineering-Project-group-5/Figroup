@@ -172,7 +172,7 @@ exports.getInvestmentSummary = async (req, res) => {
 
     // Find all investment groups the user is a member of
     const groups = await Group.find({ members: user._id, type: "INVESTMENT" });
-    
+        
     const groupContributions = await Promise.all(
       groups.map(async (group) => {
         // Get all investments for this group

@@ -6,7 +6,7 @@ const auth = require('../middleware/auth');
 // @route   POST /api/investments/{investment_id}/contributions
 // @desc    Add a contribution to an investment
 // @access  Private
-router.post('/:investment_id/contributions', auth, contributionController.addContribution);
+// router.post('/:investment_id/contributions', auth, contributionController.addContribution);
 
 // @route   GET /api/investments/{investment_id}/contributions
 // @desc    Get all contributions for an investment
