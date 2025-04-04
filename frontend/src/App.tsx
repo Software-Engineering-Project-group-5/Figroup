@@ -7,6 +7,8 @@ import { Groups } from "./pages/Groups";
 import { Investments } from "./pages/Investments";
 import { MainLayout } from "./layouts/MainLayout";
 import { GroupDetails } from "./pages/GroupDetails";
+import { GroupInvestments } from "./pages/InvestmentPoolDetails";
+
 export function App() {
   // For mock data purposes, we'll assume the user is not logged in initially
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -43,6 +45,7 @@ export function App() {
           />
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/groups/:groupId" element={<GroupDetails />} />
+          <Route path="/investments/:groupId" element={<GroupInvestments/>} />
         </Route>
       </Routes>
     </BrowserRouter>

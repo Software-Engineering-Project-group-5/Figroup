@@ -52,7 +52,6 @@ exports.createInvestment = async (req, res) => {
 
 // Get investment details
 exports.getInvestment = async (req, res) => {
-  const { user_id } = req.body
   try {
 
     const investment = await Investment.findById(req.params.investment_id);
@@ -60,16 +59,10 @@ exports.getInvestment = async (req, res) => {
       return res.status(404).json({ msg: 'Investment not found' });
     }
 
-    const user = await User.findById(user_id);
-    if(!user) {
-      return res.status(400).json({msg: 'User not found'});
-    }
     const current_value = await stock_fetcher_instance.getStockPrice(investment.stock_symbol);
-    const contribution = await Contribution.findOne( { investment_id : investment._id, user_id : user._id })
 
     const result = {
       investment: investment,
-      contribution: contribution,
       current_market_price: current_value,
     };
     res.json(result);

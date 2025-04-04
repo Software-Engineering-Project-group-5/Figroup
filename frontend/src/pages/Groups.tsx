@@ -154,6 +154,7 @@ export function Groups() {
       {showCreateGroup && (
         <CreateGroupPopup
           onClose={() => setShowCreateGroup(false)}
+          type="EXPENSE"
         />
       )}
       
