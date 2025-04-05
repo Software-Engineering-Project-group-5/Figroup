@@ -21,6 +21,7 @@ class StockPriceFetcher {
     try {
       const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${this.apiKey}`;
       const response = await axios.get(url);
+      console.log(response);
 
       const stockData = response.data['Global Quote'];
       if (!stockData) {
