@@ -17,16 +17,11 @@ jobs:
         uses: actions/checkout@v3
       - name: Create .env files
         run: |
-          if [ "${{ matrix.envType }}" = "development" ]; then
             echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
             echo "PORT=${{ secrets.PORT }}" >> .env
             echo "STOCK_API_KEY=${{ secrets.DEV_STOCK_API_KEY }}" >> .env
-          fi
-          echo "MONGO_URI=${{ secrets.TEST_MONGO_URI }}" >> .env.test
-          echo "JWT_SECRET=${{ secrets.TEST_JWT_SECRET }}" >> .env.test
-          echo "NODE_ENV=test" >> .env.test
       - name: 🔧 Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -48,6 +43,11 @@ jobs:
         run: |
           npm install jest
           npm install sinon
+      - name: Create .env files
+        run: |
+            echo "MONGO_URI=${{ secrets.TEST_MONGO_URI }}" >> .env.test
+            echo "JWT_SECRET=${{ secrets.TEST_JWT_SECRET }}" >> .env.test
+            echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env.test
       - name: 🧪 Run unit tests
         run: npm test
         env:
@@ -55,6 +55,5 @@ jobs:
           MONGO_URI: ${{ secrets.TEST_MONGO_URI }}
           JWT_SECRET: ${{ secrets.TEST_JWT_SECRET }}
           NODE_ENV: test
-          STOCK_API_KEY: ${{ secrets.TEST_STOCK_API_KEY }}
       - name: 🧱 MongoDB Atlas IP Note
         run: echo "Make sure MongoDB Atlas has firewall access set to 0.0.0.0/0 for testing & dev"
