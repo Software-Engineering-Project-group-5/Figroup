@@ -20,6 +20,7 @@ class StockPriceFetcher {
   async getStockPrice(symbol) {
     try {
       const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${this.apiKey}`;
+      console.log(this.apiKey)
       const response = await axios.get(url);
 
       const stockData = response.data['Global Quote'];

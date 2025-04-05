@@ -27,7 +27,7 @@ export function CreateGroupPopup({ onClose, type }: CreateGroupPopupProps,) {
       }
 
       const response = await axios.post(
-        'http://localhost:5001/api/groups/',
+        'https://figroup.onrender.com/api/groups/',
         {
           name,
           type: type,

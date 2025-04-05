@@ -24,7 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (storedToken) {
         try {
           // Verify token and get user data
-          const response = await axios.get('http://localhost:5001/api/users/profile', {
+          const response = await axios.get('https://figroup.onrender.com/api/users/profile', {
             headers: { 'x-auth-token': storedToken }
           });
           setUser(response.data);
@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post('http://localhost:5001/api/users/login', {
+      const response = await axios.post('https://figroup.onrender.com/api/users/login', {
         email,
         password
       });
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(token);
       
       // Get user profile
-      const profileResponse = await axios.get('http://localhost:5001/api/users/profile', {
+      const profileResponse = await axios.get('https://figroup.onrender.com/api/users/profile', {
         headers: { 'x-auth-token': token }
       });
       

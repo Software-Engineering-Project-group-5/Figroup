@@ -78,13 +78,13 @@ export function GroupDetails() {
   const refreshExpenses = async () => {
     const token = localStorage.getItem('token');
     const response = await axios.get(
-      `http://localhost:5001/api/groups/${groupId}`,
+      `https://figroup.onrender.com/api/groups/${groupId}`,
       { headers: { 'x-auth-token': token } }
     );
     setGroup(response.data);
 
     const summaryResponse = await axios.get<UserSummaryResponse>(
-        `http://localhost:5001/api/users/${currentUserId}/summary`,
+        `https://figroup.onrender.com/api/users/${currentUserId}/summary`,
         { headers: { 'x-auth-token': token } }
       );
     
@@ -105,14 +105,14 @@ export function GroupDetails() {
 
         // Fetch group details
         const groupResponse = await axios.get<Group>(
-          `http://localhost:5001/api/groups/${groupId}`,
+          `https://figroup.onrender.com/api/groups/${groupId}`,
           { headers: { 'x-auth-token': token } }
         );
         setGroup(groupResponse.data);
 
         // Fetch group summary
         const summaryResponse = await axios.get<UserSummaryResponse>(
-            `http://localhost:5001/api/users/${currentUserId}/summary`,
+            `https://figroup.onrender.com/api/users/${currentUserId}/summary`,
             { headers: { 'x-auth-token': token } }
           );
         

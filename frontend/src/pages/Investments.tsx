@@ -65,7 +65,7 @@ export function Investments() {
 
         // Fetch user investment summary
         const summaryResponse = await axios.get<UserInvestmentSummary>(
-          `http://localhost:5001/api/users/${userId}/investments/summary`,
+          `https://figroup.onrender.com/api/users/${userId}/investments/summary`,
           { headers: { 'x-auth-token': token } }
         );
         setSummary(summaryResponse.data);
@@ -73,7 +73,7 @@ export function Investments() {
         // Fetch details for each investment group
         const groupPromises = summaryResponse.data.groupContributions.map(async (group) => {
           const groupResponse = await axios.get<Group>(
-            `http://localhost:5001/api/groups/${group.group_id}`,
+            `https://figroup.onrender.com/api/groups/${group.group_id}`,
             { headers: { 'x-auth-token': token } }
           );
           return groupResponse.data;

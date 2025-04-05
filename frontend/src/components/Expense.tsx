@@ -28,7 +28,7 @@ export function CreateExpensePopup({ groupId, onClose, onExpenseCreated }: Creat
       }
 
       await axios.post(
-        'http://localhost:5001/api/expenses/',
+        'https://figroup.onrender.com/api/expenses/',
         {
           group_id: groupId,
           payer_id: currentUserId,

@@ -72,14 +72,14 @@ export function GroupInvestments() {
 
         // Fetch group details
         const groupResponse = await axios.get<Group>(
-          `http://localhost:5001/api/groups/${groupId}`,
+          `https://figroup.onrender.com/api/groups/${groupId}`,
           { headers: { 'x-auth-token': token } }
         );
         setGroup(groupResponse.data);
 
         // Fetch user's investment summary
         const summaryResponse = await axios.get<{ groupContributions: UserContribution[] }>(
-          `http://localhost:5001/api/users/${currentUserId}/investments/summary`,
+          `https://figroup.onrender.com/api/users/${currentUserId}/investments/summary`,
           { headers: { 'x-auth-token': token } }
         );
 

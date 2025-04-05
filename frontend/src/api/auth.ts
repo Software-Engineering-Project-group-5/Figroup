@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { User } from '../types/types';
 
-const API_URL = 'http://localhost:5001/api/users';
+const API_URL = 'https://figroup.onrender.com/api/users';
 
 interface AuthResponse {
   id(arg0: string, id: any): unknown;
