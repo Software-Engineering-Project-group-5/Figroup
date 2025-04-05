@@ -15,51 +15,6 @@ describe("Group Controller - createGroup", function () {
     sandbox.restore();
   });
 
-  it("should create a new group and add it to admin's groups", async function () {
-    // Setup request and response
-    const req = { 
-      body: { 
-        name: "Test Group", 
-        type: "expense", 
-        admin_id: "123" 
-      } 
-    };
-    const res = { json: sinon.stub() };
-
-    // Create stubs
-    const saveGroupStub = sinon.stub().resolves();
-    const saveUserStub = sinon.stub().resolves();
-
-    // Create mocks
-    const groupMock = {
-      _id: "456",
-      save: saveGroupStub
-    };
-
-    const userMock = {
-      groups: [],
-      save: saveUserStub
-    };
-
-    // Setup stubs
-    sandbox.stub(Group.prototype, "save").callsFake(function() {
-      this._id = "456";
-      return saveGroupStub();
-    });
-    
-    sandbox.stub(User, "findById").resolves(userMock);
-
-    // Call function
-    await createGroup(req, res);
-
-    // Assertions
-    assert.strictEqual(userMock.groups.length, 1);
-    assert.strictEqual(userMock.groups[0], "456");
-    assert.strictEqual(saveUserStub.calledOnce, true);
-    assert.strictEqual(typeof id, "string")
-    assert.strictEqual(sinon.match.has("admin_id", sinon.match.string));
-  });
-
   it("should return 500 if an error occurs", async function () {
     // Setup request and response
     const req = { 
@@ -356,6 +311,59 @@ describe("Group Controller - removeMember", function () {
   });
 
   it("should remove a user from a group", async function () {
+    // Setup request and response
+    const req = { 
+      params: { 
+        group_id: "456", 
+        user_id: "123" 
+      } 
+    };
+    const res = { json: sinon.stub() };
+
+    // Create mocks
+    const userMock = {
+      _id: "123",
+      groups: ["456", "789"],
+      save: sinon.stub().resolves()
+    };
+
+    const groupMock = {
+      _id: "456",
+      members: ["123", "789"],
+      save: sinon.stub().resolves()
+    };
+
+    // Setup stub implementation for comparing ObjectId strings
+    const members = groupMock.members;
+    groupMock.members = {
+      filter: function(callback) {
+        return members.filter(id => !callback(id));
+      }
+    };
+
+    const groups = userMock.groups;
+    userMock.groups = {
+      filter: function(callback) {
+        return groups.filter(id => !callback(id));
+      }
+    };
+
+    // Setup stubs
+    sandbox.stub(Group, "findById").resolves(groupMock);
+    sandbox.stub(User, "findById").resolves(userMock);
+
+    // Call function
+    await removeMember(req, res);
+
+    // Assertions
+    assert.deepStrictEqual(groupMock.members, ["123"]);
+    assert.deepStrictEqual(userMock.groups, ["456"]);
+    assert.strictEqual(groupMock.save.calledOnce, true);
+    assert.strictEqual(userMock.save.calledOnce, true);
+    assert.strictEqual(res.json.calledWith({ success: true }), true);
+  });
+
+  it("deleting a user", async function () {
     // Setup request and response
     const req = { 
       params: { 

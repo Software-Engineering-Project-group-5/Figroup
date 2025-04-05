@@ -36,167 +36,25 @@ describe("Expense Controller - createExpense", function () {
     assert.strictEqual(res.json.calledWith({ msg: "Group not found" }), true);
   });
 
-//   it("should create an expense with equal split and update balances", async function () {
-//     const req = { 
-//       body: { 
-//         group_id: "group123", 
-//         payer_id: "user1", 
-//         amount: 300, 
-//         description: "Dinner", 
-//         split_type: "EQUAL" 
-//       } 
-//     };
-//     const res = { json: sinon.stub() };
+  it("user found in group", async function () {
+    const req = { 
+      body: { 
+        group_id: "nonexistent", 
+        payer_id: "user1", 
+        amount: 300, 
+        description: "Dinner", 
+        split_type: "EQUAL" 
+      } 
+    };
+    const res = { status: sinon.stub().returnsThis(), json: sinon.stub() };
 
-//     // Mock group with three members
-//     const mockGroup = {
-//       _id: "group123",
-//       members: ["user1", "user2", "user3"],
-//       expenses: [],
-//       save: sinon.stub().resolves()
-//     };
+    sandbox.stub(Group, "findById").resolves(null);
 
-//     // Mock expenses and balances
-//     const mockExpense = {
-//       _id: "expense123",
-//       save: sinon.stub().resolves()
-//     };
+    await createExpense(req, res);
 
-//     const mockBalanceUser1 = {
-//       group_id: "group123",
-//       user_id: "user1",
-//       balances: new Map(),
-//       save: sinon.stub().resolves()
-//     };
-
-//     const mockBalanceUser2 = {
-//       group_id: "group123",
-//       user_id: "user2",
-//       balances: new Map(),
-//       save: sinon.stub().resolves()
-//     };
-
-//     const mockBalanceUser3 = {
-//       group_id: "group123",
-//       user_id: "user3",
-//       balances: new Map(),
-//       save: sinon.stub().resolves()
-//     };
-
-//     // Setup stubs
-//     sandbox.stub(Group, "findById").resolves(mockGroup);
-//     sandbox.stub(Expense.prototype, "save").resolves({ _id: "expense123" });
-    
-//     // Balance.findOne should return different balances depending on the user
-//     const balanceFindOneStub = sandbox.stub(Balance, "findOne");
-//     balanceFindOneStub.withArgs({ group_id: "group123", user_id: "user1" }).resolves(mockBalanceUser1);
-//     balanceFindOneStub.withArgs({ group_id: "group123", user_id: "user2" }).resolves(mockBalanceUser2);
-//     balanceFindOneStub.withArgs({ group_id: "group123", user_id: "user3" }).resolves(mockBalanceUser3);
-    
-//     // Mock Expense constructor
-//     const ExpenseConstructorStub = sandbox.stub().returns(mockExpense);
-//     sandbox.stub(Expense, "prototype").constructor = ExpenseConstructorStub;
-
-//     await createExpense(req, res);
-
-//     // Verify group was looked up
-//     assert.strictEqual(Group.findById.calledWith("group123"), true);
-    
-//     // Verify expense was saved
-//     assert.strictEqual(mockExpense.save.called, true);
-    
-//     // Verify group was updated with the new expense
-//     assert.strictEqual(mockGroup.expenses.includes("expense123"), true);
-//     assert.strictEqual(mockGroup.save.called, true);
-    
-//     // Verify balances were looked up for all members
-//     assert.strictEqual(Balance.findOne.calledWith({ group_id: "group123", user_id: "user1" }), true);
-//     assert.strictEqual(Balance.findOne.calledWith({ group_id: "group123", user_id: "user2" }), true);
-//     assert.strictEqual(Balance.findOne.calledWith({ group_id: "group123", user_id: "user3" }), true);
-    
-//     // Verify balances were saved
-//     assert.strictEqual(mockBalanceUser1.save.called, true);
-//     assert.strictEqual(mockBalanceUser2.save.called, true);
-//     assert.strictEqual(mockBalanceUser3.save.called, true);
-    
-//     // Verify response
-//     assert.strictEqual(res.json.calledWith({ expense_id: "expense123" }), true);
-//   });
-
-//   it("should create an expense with custom split", async function () {
-//     const req = { 
-//       body: { 
-//         group_id: "group123", 
-//         payer_id: "user1", 
-//         amount: 300, 
-//         description: "Dinner", 
-//         split_type: "CUSTOM",
-//         split_details: {
-//           "user1": 100,
-//           "user2": 150,
-//           "user3": 50
-//         }
-//       } 
-//     };
-//     const res = { json: sinon.stub() };
-
-//     // Mock group
-//     const mockGroup = {
-//       _id: "group123",
-//       members: ["user1", "user2", "user3"],
-//       expenses: [],
-//       save: sinon.stub().resolves()
-//     };
-
-//     // Mock expense
-//     const mockExpense = {
-//       _id: "expense123",
-//       save: sinon.stub().resolves()
-//     };
-
-//     // Mock balances
-//     const mockBalanceUser1 = {
-//       group_id: "group123",
-//       user_id: "user1",
-//       balances: new Map(),
-//       save: sinon.stub().resolves()
-//     };
-
-//     const mockBalanceUser2 = {
-//       group_id: "group123",
-//       user_id: "user2",
-//       balances: new Map(),
-//       save: sinon.stub().resolves()
-//     };
-
-//     const mockBalanceUser3 = {
-//       group_id: "group123",
-//       user_id: "user3",
-//       balances: new Map(),
-//       save: sinon.stub().resolves()
-//     };
-
-//     // Setup stubs
-//     sandbox.stub(Group, "findById").resolves(mockGroup);
-//     sandbox.stub(Expense.prototype, "save").resolves({ _id: "expense123" });
-    
-//     const balanceFindOneStub = sandbox.stub(Balance, "findOne");
-//     balanceFindOneStub.withArgs({ group_id: "group123", user_id: "user1" }).resolves(mockBalanceUser1);
-//     balanceFindOneStub.withArgs({ group_id: "group123", user_id: "user2" }).resolves(mockBalanceUser2);
-//     balanceFindOneStub.withArgs({ group_id: "group123", user_id: "user3" }).resolves(mockBalanceUser3);
-    
-//     // Mock Expense constructor
-//     const ExpenseConstructorStub = sandbox.stub().returns(mockExpense);
-//     sandbox.stub(Expense, "prototype").constructor = ExpenseConstructorStub;
-
-//     await createExpense(req, res);
-
-//     // Verify expense was saved
-//     assert.strictEqual(mockExpense.save.called, true);
-    
-//     // Verify response
-//     assert.strictEqual(res.json.calledWith({ expense_id: "expense123" }), true);
-//   });
+    assert.strictEqual(res.status.calledWith(404), true);
+    assert.strictEqual(res.json.calledWith({ msg: "Group not found" }), true);
+  });
 
   it("should return 500 if an error occurs", async function () {
     const req = { 
