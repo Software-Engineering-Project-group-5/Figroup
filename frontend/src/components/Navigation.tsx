@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { HomeIcon, UsersIcon, TrendingUpIcon, LogOutIcon } from 'lucide-react';
 export function Navigation() {

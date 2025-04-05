@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { 
-  UsersIcon, 
   PlusIcon, 
   ArrowLeftIcon,
   DollarSignIcon,
   UserIcon,
   CalendarIcon,
   TrendingUpIcon,
-  AlertCircleIcon,
-  ArrowRightIcon
-} from "lucide-react";
+  AlertCircleIcon} from "lucide-react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CreateExpensePopup } from "../components/Expense";

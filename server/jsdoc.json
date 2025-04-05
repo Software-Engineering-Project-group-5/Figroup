@@ -1,0 +1,19 @@
+{
+    "tags": {
+      "allowUnknownTags": true
+    },
+    "source": {
+      "include": ["."],
+      "includePattern": ".js$",
+      "excludePattern": "(node_modules|docs)"
+    },
+    "opts": {
+      "destination": "../docs/server/",
+      "recurse": true
+    },
+    "templates": {
+      "cleverLinks": true,
+      "monospaceLinks": false
+    }
+  }
+  

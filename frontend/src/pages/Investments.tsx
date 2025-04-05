@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { 
   TrendingUpIcon, 
   PlusIcon, 
   BarChartIcon, 
   PieChartIcon, 
   DollarSignIcon,
-  UsersIcon,
   ArrowRightIcon,
   AlertCircleIcon
 } from "lucide-react";

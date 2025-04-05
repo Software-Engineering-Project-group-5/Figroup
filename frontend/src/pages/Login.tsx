@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { TrendingUpIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../context/AuthContext";
 import { login } from "../api/auth";
 
 interface LoginProps {

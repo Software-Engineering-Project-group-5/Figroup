@@ -1,0 +1,9 @@
+{
+    "entryPoints": ["src"],
+    "out": "../docs/frontend/",
+    "includeVersion": true,
+    "excludePrivate": true,
+    "exclude": ["**/*.test.ts", "**/*.spec.ts", "**/node_modules/**"],
+    "theme": "default"
+  }
+  

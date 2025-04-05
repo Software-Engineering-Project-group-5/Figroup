@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { XIcon, PlusIcon, SearchIcon, TrendingUpIcon, DollarSignIcon } from 'lucide-react';
+import { XIcon, SearchIcon, TrendingUpIcon, DollarSignIcon } from 'lucide-react';
 import axios from 'axios';
 
 interface Stock {

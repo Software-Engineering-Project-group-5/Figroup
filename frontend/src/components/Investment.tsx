@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   XIcon, 
-  TrendingUpIcon, 
-  TrendingDownIcon,
-  DollarSignIcon,
-  PieChartIcon,
   CalendarIcon,
   UserIcon,
   ArrowUpRightIcon,
@@ -53,7 +49,7 @@ export function InvestmentPopup({ investmentId, onClose }: InvestmentPopupProps)
   const [members, setMembers] = useState<Member[]>([]);
   const [currentPrice, setCurrentPrice] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error] = useState('');
   const currentUserId = localStorage.getItem('userId');
 
   useEffect(() => {

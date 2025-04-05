@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DollarSignIcon, XIcon, UsersIcon, CalendarIcon } from 'lucide-react';
+import { DollarSignIcon, XIcon, UsersIcon } from 'lucide-react';
 import axios from 'axios';
 
 interface CreateExpensePopupProps {
