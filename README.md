@@ -90,6 +90,9 @@ Our CI workflow files can be found here:
 
 ### 🧩 Pipeline Structure Diagram
 
+![Editor _ Mermaid Chart-2025-04-05-221642](https://github.com/user-attachments/assets/ea91354a-6b69-4d49-93e3-66fc61afb375)
+
+
 ```
 flowchart TD
     A[Push or Pull Request] --> B[Trigger GitHub Actions]
