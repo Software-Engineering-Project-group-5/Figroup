@@ -41,7 +41,6 @@ jobs:
       - name: 🔧 Backend sanity check
         working-directory: ./server
         run: |
-          npm install
           node server.js &
           sleep 5
           kill $!
