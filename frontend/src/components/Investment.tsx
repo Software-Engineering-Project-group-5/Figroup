@@ -64,7 +64,7 @@ export function InvestmentPopup({ investmentId, onClose }: InvestmentPopupProps)
 
         // Fetch investment details
         const investmentRes = await axios.get<InvestmentDetails>(
-          `http://localhost:5001/api/investments/${investmentId}`,
+          `https://figroup.onrender.com/api/investments/${investmentId}`,
           { headers: { 'x-auth-token': token } }
         );
         setInvestment(investmentRes.data.investment);
@@ -72,14 +72,14 @@ export function InvestmentPopup({ investmentId, onClose }: InvestmentPopupProps)
 
         // Fetch contributions
         const contributionsRes = await axios.get<Contribution[]>(
-          `http://localhost:5001/api/contributions/${investmentId}/contributions`,
+          `https://figroup.onrender.com/api/contributions/${investmentId}/contributions`,
           { headers: { 'x-auth-token': token } }
         );
         setContributions(contributionsRes.data);
 
         // Fetch group members
         const groupRes = await axios.get<{ members: Member[] }>(
-          `http://localhost:5001/api/groups/${investmentRes.data.investment.group_id}`,
+          `https://figroup.onrender.com/api/groups/${investmentRes.data.investment.group_id}`,
           { headers: { 'x-auth-token': token } }
         );
         setMembers(groupRes.data.members);

@@ -27,7 +27,7 @@ export function AddMemberPopup({ groupId, onClose, onMemberAdded }: AddMemberPop
       }
 
       const response = await axios.post(
-        `http://localhost:5001/api/groups/${groupId}/members`,
+        `https://figroup.onrender.com/api/groups/${groupId}/members`,
         { 
           email:email,
           group_id: groupId

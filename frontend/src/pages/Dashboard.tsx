@@ -64,7 +64,7 @@ export function Dashboard() {
         }
 
         const response = await axios.get(
-          `http://localhost:5001/api/users/${userId}/summary`,
+          `https://figroup.onrender.com/api/users/${userId}/summary`,
           { headers: { 'x-auth-token': token } }
         );
 
@@ -90,7 +90,7 @@ export function Dashboard() {
       try {
         const token = localStorage.getItem('token');
         const response = await axios.get(
-          `http://localhost:5001/api/expenses/groups/${selectedGroupId}/expenses`,
+          `https://figroup.onrender.com/api/expenses/groups/${selectedGroupId}/expenses`,
           { headers: { 'x-auth-token': token } }
         );
         

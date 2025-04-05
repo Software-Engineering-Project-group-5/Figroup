@@ -27,7 +27,7 @@ export function CreateInvestmentPopup({ groupId, onClose, onInvestmentCreated }:
       try {
         const token = localStorage.getItem('token');
         const response = await axios.get<{ stocks: Record<string, string> }>(
-          'http://localhost:5001/api/stocks/',
+          'https://figroup.onrender.com/api/stocks/',
           { headers: { 'x-auth-token': token } }
         );
 
@@ -64,7 +64,7 @@ export function CreateInvestmentPopup({ groupId, onClose, onInvestmentCreated }:
       const token = localStorage.getItem('token');
       
       await axios.post(
-        'http://localhost:5001/api/investments/',
+        'https://figroup.onrender.com/api/investments/',
         {
           group_id: groupId,
           total_amount: parseFloat(totalAmount),

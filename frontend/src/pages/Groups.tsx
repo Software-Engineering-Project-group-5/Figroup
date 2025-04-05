@@ -56,14 +56,14 @@ export function Groups() {
 
         // Fetch user summary to get group IDs
         const summaryResponse = await axios.get<UserSummary>(
-          `http://localhost:5001/api/users/${userId}/summary`,
+          `https://figroup.onrender.com/api/users/${userId}/summary`,
           { headers: { 'x-auth-token': token } }
         );
 
         // Fetch details for each group
         const groupPromises = summaryResponse.data.groupBalances.map(async (groupBalance) => {
           const groupResponse = await axios.get<Group>(
-            `http://localhost:5001/api/groups/${groupBalance.group_id}`,
+            `https://figroup.onrender.com/api/groups/${groupBalance.group_id}`,
             { headers: { 'x-auth-token': token } }
           );
           return groupResponse.data;
