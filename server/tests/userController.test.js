@@ -183,6 +183,57 @@ describe("getProfile", function () {
   });
 });
 
+describe("fetchUserProfileDetails", function () {
+  let sandbox;
+  
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+  
+  it("should return user details without password_hash", async function () {
+    const req = { user: { id: "123" } };
+    const res = { json: sinon.stub(), status: sinon.stub().returnsThis(), send: sinon.stub() };
+
+    // Create a stub that handles the select method chain
+    const selectStub = sinon.stub().returns({ 
+      id: "123", 
+      name: "Test User", 
+      email: "test@example.com"
+    });
+    
+    const findByIdStub = sandbox.stub(User, "findById").returns({
+      select: selectStub
+    });
+
+    await getProfile(req, res);
+
+    assert.strictEqual(findByIdStub.calledWith("123"), true);
+    assert.strictEqual(selectStub.calledWith("-password_hash"), true);
+    assert.strictEqual(res.json.calledWithMatch({ 
+      id: "123", 
+      name: "Test User", 
+      email: "test@example.com" 
+    }), true);
+  });
+
+  it("should return 500 if an error occurs", async function () {
+    const req = { user: { id: "123" } };
+    const res = { status: sinon.stub().returnsThis(), send: sinon.stub() };
+
+    // This mock needs to handle the chained select method
+    sandbox.stub(User, "findById").throws(new Error("Database error"));
+
+    await getProfile(req, res);
+
+    assert.strictEqual(res.status.calledWith(500), true);
+    assert.strictEqual(res.send.calledWith("Server error"), true);
+  });
+});
+
 /** ===================== TEST: getUser ===================== */
 describe("getUser", function () {
   let sandbox;

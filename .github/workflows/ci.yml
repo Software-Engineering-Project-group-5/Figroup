@@ -1,0 +1,61 @@
+name: MERN CI Pipeline
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        envType: [development, testing]
+    env:
+      NODE_ENV: ${{ matrix.envType }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Create .env files
+        run: |
+          if [ "${{ matrix.envType }}" = "development" ]; then
+            echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+            echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
+            echo "PORT=${{ secrets.PORT }}" >> .env
+            echo "STOCK_API_KEY=${{ secrets.DEV_STOCK_API_KEY }}" >> .env
+          fi
+          echo "MONGO_URI=${{ secrets.TEST_MONGO_URI }}" >> .env.test
+          echo "JWT_SECRET=${{ secrets.TEST_JWT_SECRET }}" >> .env.test
+          echo "NODE_ENV=test" >> .env.test
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: 📦 Install root dependencies
+        run: npm install
+      - name: 📦 Install frontend dependencies & build
+        working-directory: ./frontend
+        run: |
+          npm install
+          npm run build
+      - name: 🔧 Backend sanity check
+        working-directory: ./server
+        run: |
+          npm install
+          node server.js &
+          sleep 5
+          kill $!
+      - name: 🧪 Install test dependencies
+        run: |
+          npm install jest
+          npm install sinon
+      - name: 🧪 Run unit tests
+        run: npm test
+        env:
+          # Direct environment variables for tests
+          MONGO_URI: ${{ secrets.TEST_MONGO_URI }}
+          JWT_SECRET: ${{ secrets.TEST_JWT_SECRET }}
+          NODE_ENV: test
+          STOCK_API_KEY: ${{ secrets.TEST_STOCK_API_KEY }}
+      - name: 🧱 MongoDB Atlas IP Note
+        run: echo "Make sure MongoDB Atlas has firewall access set to 0.0.0.0/0 for testing & dev"
