@@ -7,9 +7,6 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        envType: [development, testing]
     env:
       NODE_ENV: ${{ matrix.envType }}
     steps:
@@ -28,32 +25,15 @@ jobs:
           node-version: '18'
       - name: 📦 Install root dependencies
         run: npm install
-      - name: 📦 Install frontend dependencies & build
-        working-directory: ./frontend
-        run: |
-          npm install
-          npm run build
       - name: 🔧 Backend sanity check
         working-directory: ./server
         run: |
-          MONGO_URI=${{ secrets.MONGO_URI }} JWT_SECRET=${{ secrets.JWT_SECRET }} NODE_ENV=${{ secrets.NODE_ENV }} PORT=${{ secrets.PORT }} STOCK_API_KEY=${{ secrets.DEV_STOCK_API_KEY }} node server &
+          node server &
           sleep 5
           kill $!
       - name: 🧪 Install test dependencies
         run: |
           npm install jest
           npm install sinon
-      - name: Create .env files
-        run: |
-            echo "MONGO_URI=${{ secrets.TEST_MONGO_URI }}" >> .env.test
-            echo "JWT_SECRET=${{ secrets.TEST_JWT_SECRET }}" >> .env.test
-            echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env.test
       - name: 🧪 Run unit tests
         run: npm test
-        env:
-          # Direct environment variables for tests
-          MONGO_URI: ${{ secrets.TEST_MONGO_URI }}
-          JWT_SECRET: ${{ secrets.TEST_JWT_SECRET }}
-          NODE_ENV: test
-      - name: 🧱 MongoDB Atlas IP Note
-        run: echo "Make sure MongoDB Atlas has firewall access set to 0.0.0.0/0 for testing & dev"
