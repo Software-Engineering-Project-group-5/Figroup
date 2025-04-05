@@ -65,7 +65,7 @@ To manually trigger a build or test the pipeline locally:
    ```
 2. **Install dependencies (Backend)**:
    ```bash
-   cd backend
+   cd server
    node server
    cd ..
    npm test
@@ -83,7 +83,7 @@ For CI/CD workflows, pushing changes or creating a pull request will automatical
 
 ### 📁 CI Pipeline Location
 
-You can find our CI workflow files here:  
+Our CI workflow files can be found here:  
 🔗 [CI Pipeline Scripts – GitHub Workflows](https://github.com/Software-Engineering-Project-group-5/Figroup/tree/main/.github/workflows)
 
 ---
@@ -95,7 +95,7 @@ flowchart TD
     A[Push or Pull Request] --> B[Trigger GitHub Actions]
     
     B --> C1[Frontend CI Workflow]
-    B --> C2[Backend CI Workflow]
+    B --> C2[Server CI Workflow]
     
     C1 --> D1[Setup Node.js & Install Dependencies]
     D1 --> E1[Run Frontend Build (Syntax Check)]
@@ -103,7 +103,7 @@ flowchart TD
     
     C2 --> D2[Setup Node.js & Install Dependencies]
     D2 --> D3[Run Unit Tests (40 Tests)]
-    D3 --> D4[Sanity Check - Run Backend 5s]
+    D3 --> D4[Sanity Check - Run Server 5s]
     D4 --> F2[Backend Test Successful]
     
     F1 & F2 --> G[CI Pipeline Passes]
