@@ -19,19 +19,17 @@ class StockPriceFetcher {
 
   async getStockPrice(symbol) {
     try {
-      const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${this.apiKey}`;
+      const url = `https://api.twelvedata.com/price?symbol=${symbol}&apikey=${this.apiKey}`;
       const response = await axios.get(url);
-      console.log(response);
-
-      const stockData = response.data['Global Quote'];
-      if (!stockData) {
-        throw new Error('Stock data not found');
+  
+      const { price } = response.data;
+      if (!price) {
+        throw new Error('Stock price not found');
       }
-
-      const stockPrice = stockData['05. price'];
-      return stockPrice;
+  
+      return price;
     } catch (error) {
-      console.error('Error fetching stock price:', error.message);
+      console.error('Error fetching stock price:', error.response?.data || error.message);
       return null;
     }
   }
