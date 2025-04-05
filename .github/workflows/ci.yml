@@ -13,6 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Create .env files
+        working-directory: ./server
         run: |
             echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
@@ -23,9 +24,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - name: 📦 Install root dependencies
+      - name: Install root dependencies
         run: npm install
-      - name: 🔧 Backend sanity check
+      - name: Backend sanity check
         working-directory: ./server
         run: |
           node server &
