@@ -41,12 +41,7 @@ jobs:
       - name: 🔧 Backend sanity check
         working-directory: ./server
         run: |
-          npm install
-          if [ "${{ matrix.envType }}" = "development" ]; then
-            MONGO_URI=${{ secrets.MONGO_URI }} JWT_SECRET=${{ secrets.JWT_SECRET }} NODE_ENV=${{ secrets.NODE_ENV }} PORT=${{ secrets.PORT }} STOCK_API_KEY=${{ secrets.DEV_STOCK_API_KEY }} node server &
-          else
-            MONGO_URI=${{ secrets.TEST_MONGO_URI }} JWT_SECRET=${{ secrets.TEST_JWT_SECRET }} NODE_ENV=test node server &
-          fi
+          MONGO_URI=${{ secrets.MONGO_URI }} JWT_SECRET=${{ secrets.JWT_SECRET }} NODE_ENV=${{ secrets.NODE_ENV }} PORT=${{ secrets.PORT }} STOCK_API_KEY=${{ secrets.DEV_STOCK_API_KEY }} node server &
           sleep 5
           kill $!
       - name: 🧪 Install test dependencies
