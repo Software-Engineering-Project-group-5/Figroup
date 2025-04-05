@@ -67,7 +67,7 @@ exports.login = async (req, res) => {
 // Get logged-in user's profile
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password_hash');
+    const user = await User.findById(req.user._id).select('-password_hash');
     res.json(user);
   } catch (err) {
     console.error(err.message);
