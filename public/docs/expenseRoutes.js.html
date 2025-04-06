@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: expenseRoutes.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: expenseRoutes.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const express = require('express');
+const router = express.Router();
+const expenseController = require('../controllers/expenseController');
+const auth = require('../middleware/auth');
+
+/**
+ * @module ExpenseRouter
+ * @description Routes for managing expenses
+ */
+
+/**
+ * Handles POST requests to /api/expenses to create a new expense.
+ *
+ * @param {Object} req - The request object
+ * @param {Object} req.body - The expense data
+ * @param {string} req.body.group_id - The ID of the group
+ * @param {string} req.body.payer_id - The ID of the user who paid for the expense
+ * @param {number} req.body.amount - The total amount of the expense
+ * @param {string} req.body.description - The description of the expense
+ * @param {string} req.body.split_type - The type of split for the expense ('EQUAL' or 'CUSTOM')
+ * @param {Object} req.body.split_details - Map of user IDs to their share amounts (for 'CUSTOM' split)
+ * @param {Object} res - The response object
+ * @returns {void}
+ *
+ * @description
+ * Creates a new expense with specified details including split type and payer.
+ *
+ * This endpoint requires authentication via bearer token.
+ *
+ * **Request Body:**
+ * - `group_id`: string (required) - ID of the group the expense belongs to
+ * - `payer_id`: string (required) - ID of the user who paid for the expense
+ * - `amount`: number (required) - Total amount of the expense
+ * - `description`: string (required) - Description of the expense
+ * - `split_type`: string (required) - Type of split for the expense ('EQUAL' or 'CUSTOM')
+ * - `split_details`: object (required) - Map of user IDs to their share amounts (for 'CUSTOM' split)
+ *
+ * **Responses:**
+ * - **201**: Expense created successfully. Returns `{ expense_id: string }`
+ *   - `expense_id`: string - ID of the created expense
+ * - **400**: Invalid request data
+ * - **401**: Unauthorized - Invalid or missing authentication token
+ * - **500**: Server error
+ */
+router.post('/', auth, expenseController.createExpense);
+
+/**
+ * Handles GET requests to /api/expenses/{expense_id} to retrieve expense details.
+ *
+ * @param {Object} req - The request object
+ * @param {string} req.params.expense_id - The ID of the expense
+ * @param {Object} res - The response object
+ * @returns {void}
+ *
+ * @description
+ * Retrieves detailed information about a specific expense.
+ *
+ * This endpoint requires authentication via bearer token.
+ *
+ * **Path Parameters:**
+ * - `expense_id`: string (required) - ID of the expense to retrieve
+ *
+ * **Responses:**
+ * - **200**: Expense details retrieved successfully. Returns expense object
+ *   - `_id`: string - Expense ID
+ *   - `group_id`: string - ID of the group the expense belongs to
+ *   - `payer_id`: string - ID of the user who paid for the expense
+ *   - `amount`: number - Total amount of the expense
+ *   - `description`: string - Description of the expense
+ *   - `split_type`: string - Type of split for the expense ('EQUAL' or 'CUSTOM')
+ *   - `split_details`: object - Map of user IDs to their share amounts
+ *   - `created_at`: string (date-time) - Timestamp when the expense was created
+ * - **401**: Unauthorized - Invalid or missing authentication token
+ * - **404**: Expense not found
+ * - **500**: Server error
+ */
+router.get('/:expense_id', auth, expenseController.getExpense);
+
+/**
+ * Handles GET requests to /api/groups/{group_id}/expenses to retrieve all expenses for a group.
+ *
+ * @param {Object} req - The request object
+ * @param {string} req.params.group_id - The ID of the group
+ * @param {Object} res - The response object
+ * @returns {void}
+ *
+ * @description
+ * Retrieves a list of all expenses associated with a specific group.
+ *
+ * This endpoint requires authentication via bearer token.
+ *
+ * **Path Parameters:**
+ * - `group_id`: string (required) - ID of the group
+ *
+ * **Responses:**
+ * - **200**: List of group expenses retrieved successfully. Returns an array of expense objects
+ *   - Items: object
+ *     - `_id`: string - Expense ID
+ *     - `group_id`: string - ID of the group the expense belongs to
+ *     - `payer_id`: string - ID of the user who paid for the expense
+ *     - `amount`: number - Total amount of the expense
+ *     - `description`: string - Description of the expense
+ *     - `split_type`: string - Type of split for the expense ('EQUAL' or 'CUSTOM')
+ *     - `split_details`: object - Map of user IDs to their share amounts
+ *     - `created_at`: string (date-time) - Timestamp when the expense was created
+ * - **401**: Unauthorized. Returns `{ msg: string }`
+ *   - Example: `{ "msg": "Token is not valid" }`
+ */
+router.get('/groups/:group_id/expenses', auth, expenseController.getGroupExpenses);
+
+module.exports = router;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ContributionRouter.html">ContributionRouter</a></li><li><a href="module-ExpenseRouter.html">ExpenseRouter</a></li><li><a href="module-GroupRouter.html">GroupRouter</a></li><li><a href="module-InvestmentRouter.html">InvestmentRouter</a></li><li><a href="module-ReportRouter.html">ReportRouter</a></li><li><a href="module-SettlementRouter.html">SettlementRouter</a></li><li><a href="module-StocksRouter.html">StocksRouter</a></li><li><a href="module-UsersRouter.html">UsersRouter</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Apr 05 2025 22:05:04 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
