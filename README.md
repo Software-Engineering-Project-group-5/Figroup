@@ -2,6 +2,8 @@
 
 ## 🛠 Build, Test, and Deployment Instructions
 
+Link to wiki: https://github.com/Software-Engineering-Project-group-5/Figroup/wiki
+
 ### Build Script Overview
 
 Our project follows a CI/CD pipeline using GitHub Actions to ensure smooth compilation, testing, packaging, and deployment processes for both frontend and backend services. Below are the details of our setup:
