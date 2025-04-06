@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: reportRoutes.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: reportRoutes.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const express = require('express');
+const router = express.Router();
+const reportController = require('../controllers/reportController');
+const auth = require('../middleware/auth');
+
+/**
+ * @module ReportRouter
+ * @description Routes for managing reports
+ */
+/**
+ * @route GET /api/users/{user_id}/summary
+ * @group Reports - Financial reporting operations
+ * @summary Get user financial summary
+ * @description Returns total owed, total to receive, and expense breakdown for a specific user across all groups
+ * @security bearerAuth
+ * @param {string} user_id.path.required - Unique identifier of the user - example: 67d5a8609335c8e6e12013cc
+ * @returns {object} 200 - User summary retrieved successfully
+ * @returns {number} 200.total_owed - Total amount owed by the user - example: 150.25
+ * @returns {number} 200.total_to_receive - Total amount to be received - example: 2006.67
+ * @returns {Array.&lt;object>} 200.expense_breakdown - Categorized expense breakdown
+ * @returns {string} 200.expense_breakdown.category - Expense category - example: Food
+ * @returns {number} 200.expense_breakdown.amount - Total in category - example: 450.75
+ * @returns {object} 401 - Unauthorized - example: { msg: "Token is not valid" }
+ * @returns {object} 404 - User not found - example: { msg: "User not found" }
+ */
+router.get('/users/:user_id/summary', auth, reportController.getUserSummary);
+
+/**
+ * @route GET /api/groups/{group_id}/report
+ * @group Reports - Financial reporting operations
+ * @summary Get group financial summary
+ * @description Returns aggregated report data for the group including expenses and investments
+ * @security bearerAuth
+ * @param {string} group_id.path.required - Unique identifier of the group - example: 67d5ad9e3cc22e833a11dd32
+ * @returns {object} 200 - Group report retrieved successfully
+ * @returns {string} 200.group_id - Group ID - example: 67d5ad9e3cc22e833a11dd32
+ * @returns {number} 200.total_expenses - Total group expenses - example: 3010.00
+ * @returns {number} 200.total_investments - Total group investments - example: 5000.00
+ * @returns {Array.&lt;object>} 200.members - List of group members
+ * @returns {string} 200.members.user_id - User ID - example: 67d5a8609335c8e6e12013cc
+ * @returns {string} 200.members.name - Member name - example: bhargav
+ * @returns {Array.&lt;object>} 200.expenses - List of group expenses
+ * @returns {string} 200.expenses._id - Expense ID - example: 67f1cd453a8921f09ad3fe45
+ * @returns {string} 200.expenses.description - Expense description - example: Team dinner
+ * @returns {number} 200.expenses.amount - Expense amount - example: 1003.33
+ * @returns {string} 200.expenses.payer_id - Payer ID - example: 67d5a8609335c8e6e12013cc
+ * @returns {string} 200.expenses.created_at - Creation timestamp - example: 2025-04-05T20:15:25.850Z
+ * @returns {Array.&lt;object>} 200.investments - List of group investments
+ * @returns {string} 200.investments._id - Investment ID - example: 67f1cd453a8921f09ad3fe48
+ * @returns {string} 200.investments.stock_symbol - Stock symbol - example: AAPL
+ * @returns {string} 200.investments.company_name - Company name - example: Apple Inc.
+ * @returns {number} 200.investments.amount_invested - Invested amount - example: 2000.00
+ * @returns {string} 200.investments.purchase_date - Purchase date - example: 2025-03-20T14:30:25.850Z
+ * @returns {object} 401 - Unauthorized - example: { msg: "Token is not valid" }
+ * @returns {object} 404 - Group not found - example: { msg: "Group not found" }
+ */
+router.get('/groups/:group_id/report', auth, reportController.getGroupReport);
+
+/**
+ * @route GET /api/investments/{investment_id}/performance
+ * @group Reports - Financial reporting operations
+ * @summary Get investment performance
+ * @description Returns current value and profit/loss for a specific investment
+ * @security bearerAuth
+ * @param {string} investment_id.path.required - Unique identifier of the investment - example: 67f1cd453a8921f09ad3fe48
+ * @returns {object} 200 - Investment performance retrieved successfully
+ * @returns {number} 200.current_value - Current investment value - example: 2100.50
+ * @returns {number} 200.profit_loss - Profit/loss amount - example: 100.50
+ * @returns {object} 401 - Unauthorized - example: { msg: "Token is not valid" }
+ * @returns {object} 404 - Investment not found - example: { msg: "Investment not found" }
+ */
+router.get('/investments/:investment_id/performance', auth, reportController.getInvestmentPerformance);
+
+module.exports = router;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ContributionRouter.html">ContributionRouter</a></li><li><a href="module-ExpenseRouter.html">ExpenseRouter</a></li><li><a href="module-GroupRouter.html">GroupRouter</a></li><li><a href="module-InvestmentRouter.html">InvestmentRouter</a></li><li><a href="module-ReportRouter.html">ReportRouter</a></li><li><a href="module-SettlementRouter.html">SettlementRouter</a></li><li><a href="module-StocksRouter.html">StocksRouter</a></li><li><a href="module-UsersRouter.html">UsersRouter</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Apr 05 2025 22:05:04 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

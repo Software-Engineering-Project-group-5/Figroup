@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: userRoutes.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: userRoutes.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const express = require('express');
+const router = express.Router();
+const userController = require('../controllers/userController');
+const auth = require('../middleware/auth');
+
+/**
+ * @module UsersRouter
+ * @description Routes for managing users
+ */
+/**
+ * Register a new user
+ * 
+ * @route POST /api/users/register
+ * @description Creates a new user account
+ * @access Public
+ * 
+ * @param {Object} req.body.required - Request body
+ * @param {string} req.body.name - User's full name - eg: "John Doe"
+ * @param {string} req.body.email - User's email address (must be unique) - eg: "john@example.com"
+ * @param {string} req.body.password - User's password (min 8 characters) - eg: "Password@1234"
+ * 
+ * @returns {Object} 201 - User registered successfully
+ * @returns {string} 201.user_id - Unique identifier for the created user - eg: "67f1baf52a3038f09ad2fed0"
+ * @returns {string} 201.token - JWT authentication token
+ * 
+ * @returns {Object} 400 - Invalid input or user already exists
+ * @returns {string} 400.msg - Error message - eg: "User already exists"
+ */
+router.post('/register', userController.register);
+
+/**
+ * Login user
+ * 
+ * @route POST /api/users/login
+ * @description Authenticates a user and returns a JWT token
+ * @access Public
+ * 
+ * @param {Object} req.body.required - Request body
+ * @param {string} req.body.email - User's email address - eg: "john@example.com"
+ * @param {string} req.body.password - User's password - eg: "Password@1234"
+ * 
+ * @returns {Object} 200 - Login successful
+ * @returns {string} 200.token - JWT authentication token
+ * @returns {Object} 200.user - User object
+ * @returns {string} 200.user._id - User ID - eg: "67d5a8609335c8e6e12013cc"
+ * 
+ * @returns {Object} 401 - Invalid credentials
+ * @returns {string} 401.msg - Error message - eg: "Invalid credentials"
+ */
+router.post('/login', userController.login);
+
+/**
+ * Get logged-in user's profile
+ * 
+ * @route GET /api/users/profile
+ * @description Retrieves the profile data for the currently authenticated user
+ * @access Private
+ * 
+ * @returns {Object} 200 - Profile retrieved successfully
+ * @returns {string} 200._id - User ID - eg: "67f1baf52a3038f09ad2fed0"
+ * @returns {string} 200.name - User's name - eg: "bhargav"
+ * @returns {string} 200.email - User's email - eg: "bhuvan.s@northeastern.edu"
+ * @returns {Array&lt;string>} 200.groups - IDs of groups the user belongs to
+ * @returns {string} 200.created_at - User creation timestamp - eg: "2025-04-05T23:21:25.850Z"
+ * @returns {string} 200.updated_at - User last update timestamp - eg: "2025-04-05T23:21:25.850Z"
+ * @returns {number} 200.__v - Version key - eg: 0
+ * 
+ * @returns {Object} 401 - Unauthorized - Invalid or expired token
+ * @returns {string} 401.msg - Error message - eg: "Token is not valid"
+ */
+router.get('/profile', auth, userController.getProfile);
+
+/**
+ * Get user details by ID
+ * 
+ * @route GET /api/users/{user_id}
+ * @description Retrieves detailed information about a specific user by their ID
+ * @access Private
+ * 
+ * @param {string} user_id.path.required - Unique identifier of the user - eg: "67f1baf52a3038f09ad2fed0"
+ * 
+ * @returns {Object} 200 - User found
+ * @returns {string} 200._id - User ID - eg: "67f1baf52a3038f09ad2fed0"
+ * @returns {string} 200.name - User's name - eg: "bhargav"
+ * @returns {string} 200.email - User's email - eg: "bhuvan.s@northeastern.edu"
+ * @returns {Array&lt;string>} 200.groups - IDs of groups the user belongs to
+ * @returns {string} 200.created_at - User creation timestamp - eg: "2025-04-05T23:21:25.850Z"
+ * @returns {string} 200.updated_at - User last update timestamp - eg: "2025-04-05T23:21:25.850Z"
+ * @returns {number} 200.__v - Version key - eg: 0
+ * 
+ * @returns {Object} 401 - Unauthorized - Invalid or expired token
+ * @returns {string} 401.msg - Error message - eg: "Token is not valid"
+ * 
+ * @returns {Object} 404 - User not found
+ * @returns {string} 404.msg - Error message - eg: "User not found"
+ */
+router.get('/:user_id', auth, userController.getUser);
+
+/**
+ * Update user details
+ * 
+ * @route PUT /api/users/{user_id}
+ * @description Updates information for a specific user by ID
+ * @access Private
+ * 
+ * @param {string} user_id.path.required - Unique identifier of the user to update - eg: "67d5a8609335c8e6e12013cc"
+ * @param {Object} req.body.required - Request body
+ * @param {string} req.body.name - User's updated name - eg: "fair share"
+ * @param {string} req.body.email - User's updated email - eg: "updated@example.com"
+ * 
+ * @returns {Object} 200 - User updated successfully
+ * @returns {string} 200._id - User ID - eg: "67d5a8609335c8e6e12013cc"
+ * @returns {string} 200.name - User's updated name - eg: "fair share"
+ * @returns {string} 200.email - User's email - eg: "bhuvanam.s@northeastern.edu"
+ * @returns {string} 200.password_hash - Hashed password
+ * @returns {Array&lt;string>} 200.groups - IDs of groups the user belongs to - eg: ["67d5ad9e3cc22e833a11dd32", "67f05874ba42616a93d7cf37", "67f058f9ba42616a93d7cfab"]
+ * @returns {string} 200.created_at - User creation timestamp - eg: "2025-03-15T16:18:40.857Z"
+ * @returns {string} 200.updated_at - User last update timestamp - eg: "2025-03-15T16:18:40.858Z"
+ * @returns {number} 200.__v - Version key - eg: 3
+ * 
+ * @returns {Object} 400 - Invalid data
+ * @returns {string} 400.msg - Error message - eg: "Invalid input data"
+ * 
+ * @returns {Object} 401 - Unauthorized
+ * @returns {string} 401.msg - Error message - eg: "Token is not valid"
+ */
+router.put('/:user_id', auth, userController.updateUser);
+
+/**
+ * Get user financial summary
+ * 
+ * @route GET /api/users/{user_id}/summary
+ * @description Retrieves financial summary including balances across all groups for a specific user
+ * @access Private
+ * 
+ * @param {string} user_id.path.required - Unique identifier of the user - eg: "67d5a8609335c8e6e12013cc"
+ * 
+ * @returns {Object} 200 - Financial summary retrieved successfully
+ * @returns {Array&lt;Object>} 200.groupBalances - Financial balances for each group
+ * @returns {string} 200.groupBalances[].group_id - Group identifier - eg: "67d5ad9e3cc22e833a11dd32"
+ * @returns {string} 200.groupBalances[].group_name - Name of the group - eg: "test group"
+ * @returns {number} 200.groupBalances[].total_owed - Total amount owed by user to others in this group - eg: 0
+ * @returns {number} 200.groupBalances[].total_to_receive - Total amount to be received by user from others in this group - eg: 2006.6666666666667
+ * @returns {Array&lt;Object>} 200.groupBalances[].owes_to - Details of amounts owed to other users
+ * @returns {string} 200.groupBalances[].owes_to[].user_id - User ID of the person owed money to
+ * @returns {number} 200.groupBalances[].owes_to[].amount - Amount owed
+ * @returns {Array&lt;Object>} 200.groupBalances[].gets_from - Details of amounts to be received from other users
+ * @returns {string} 200.groupBalances[].gets_from[].user_id - User ID of the person who owes money - eg: "67d5ace83cc22e833a11dd2d"
+ * @returns {number} 200.groupBalances[].gets_from[].amount - Amount to be received - eg: 1003.3333333333334
+ * @returns {string} 200.name - User's name - eg: "bhargav"
+ * 
+ * @returns {Object} 401 - Unauthorized
+ * @returns {string} 401.msg - Error message - eg: "Token is not valid"
+ * 
+ * @returns {Object} 404 - User not found
+ * @returns {string} 404.msg - Error message - eg: "User not found"
+ */
+router.get('/:user_id/summary', auth, userController.getUserSummary);
+
+/**
+ * Get user investment summary
+ * 
+ * @route GET /api/users/{user_id}/investments/summary
+ * @description Retrieves investment summary across all groups for a specific user
+ * @access Private
+ * 
+ * @param {string} user_id.path.required - Unique identifier of the user - eg: "67d5a8609335c8e6e12013cc"
+ * 
+ * @returns {Object} 200 - Investment summary retrieved successfully
+ * @returns {string} 200.user_id - User identifier - eg: "67d5a8609335c8e6e12013cc"
+ * @returns {string} 200.name - User's name - eg: "bhargav"
+ * @returns {Array&lt;Object>} 200.groupContributions - Investment contributions across groups
+ * @returns {string} 200.groupContributions[].group_id - Group identifier
+ * @returns {string} 200.groupContributions[].group_name - Name of the group
+ * @returns {number} 200.groupContributions[].total_contributed - Total amount contributed to investments in this group
+ * @returns {Array&lt;Object>} 200.groupContributions[].investments - Details of individual investments
+ * @returns {string} 200.groupContributions[].investments[].investment_id - Investment identifier
+ * @returns {string} 200.groupContributions[].investments[].name - Investment name
+ * @returns {number} 200.groupContributions[].investments[].amount - Amount contributed to this investment
+ * 
+ * @returns {Object} 401 - Unauthorized
+ * @returns {string} 401.msg - Error message - eg: "Token is not valid"
+ * 
+ * @returns {Object} 404 - User not found
+ * @returns {string} 404.msg - Error message - eg: "User not found"
+ */
+router.get('/:user_id/investments/summary', auth, userController.getInvestmentSummary);
+
+module.exports = router;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ContributionRouter.html">ContributionRouter</a></li><li><a href="module-ExpenseRouter.html">ExpenseRouter</a></li><li><a href="module-GroupRouter.html">GroupRouter</a></li><li><a href="module-InvestmentRouter.html">InvestmentRouter</a></li><li><a href="module-ReportRouter.html">ReportRouter</a></li><li><a href="module-SettlementRouter.html">SettlementRouter</a></li><li><a href="module-StocksRouter.html">StocksRouter</a></li><li><a href="module-UsersRouter.html">UsersRouter</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Apr 05 2025 22:05:04 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
