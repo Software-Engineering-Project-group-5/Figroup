@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: groupRoutes.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: groupRoutes.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const express = require('express');
+const router = express.Router();
+const groupController = require('../controllers/groupController');
+const auth = require('../middleware/auth');
+
+/**
+ * @module GroupRouter
+ * @description Routes for managing groups
+ */
+/**
+ * @route POST /api/groups
+ * @group Groups - Group management operations
+ * @summary Create a new group
+ * @description Creates a new investment or expense group
+ * @security bearerAuth
+ * @param {string} body.name.required - Name of the group
+ * @param {string} body.type.required - Group type (EXPENSE/INVESTMENT) - enum:EXPENSE,INVESTMENT
+ * @param {string} body.admin_id.required - ID of the group admin
+ * @returns {object} 201 - Group creation response
+ * @returns {string} 201.group_id - ID of created group - example: "67d5ad9e3cc22e833a11dd32"
+ * @returns {object} 400 - Bad request - example: { msg: "Invalid input data" }
+ * @returns {object} 401 - Unauthorized - example: { msg: "Toke is not valid" }
+ */
+router.post('/', auth, groupController.createGroup);
+
+/**
+ * @route GET /api/groups/{group_id}
+ * @group Groups - Group management operations
+ * @summary Get group details
+ * @description Retrieves detailed information about a specific group
+ * @security bearerAuth
+ * @param {string} group_id.path.required - ID of the group
+ * @returns {object} 200 - Group details response
+ * @returns {string} 200._id - Group ID - example: "67d5ad9e3cc22e833a11dd32"
+ * @returns {string} 200.name - Group name - example: "Investment Group"
+ * @returns {string} 200.type - Group type - enum:EXPENSE,INVESTMENT - example: "INVESTMENT"
+ * @returns {string} 200.admin_id - Admin ID - example: "67d5a9876cc22e833a11dd12"
+ * @returns {Array.&lt;string>} 200.members - Member IDs array
+ * @returns {Array.&lt;string>} 200.expenses - Expense IDs array
+ * @returns {Array.&lt;string>} 200.investments - Investment IDs array
+ * @returns {string} 200.created_at - Creation timestamp - format:date-time
+ * @returns {string} 200.updated_at - Update timestamp - format:date-time
+ * @returns {object} 401 - Unauthorized - example: { msg: "Token is not valid" }
+ * @returns {object} 404 - Not found - example: { msg: "Group or user not found" }
+ */
+router.get('/:group_id', auth, groupController.getGroup);
+
+/**
+ * @route POST /api/groups/{group_id}/members
+ * @group Groups - Group management operations
+ * @summary Add a user to a group by email
+ * @description Adds a user to an existing group using their email address
+ * @security bearerAuth
+ * @param {string} group_id.path.required - ID of the group
+ * @param {string} body.email.required - User's email - format:email - example: "newUser3.s@northeastern.edu"
+ * @returns {object} 200 - Success response - example: { success: true }
+ * @returns {object} 400 - Bad request - example: { msg: "Invalid input data" }
+ * @returns {object} 401 - Unauthorized - example: { msg: "Toke is not valid" }
+ * @returns {object} 404 - Not found - example: { msg: "Group or user not found" }
+ */
+router.post('/:group_id/members', auth, groupController.addMemberByEmail);
+
+/**
+ * @route DELETE /api/groups/{group_id}/members/{user_id}
+ * @group Groups - Group management operations
+ * @summary Remove a user from a group
+ * @description Removes a specific user from an existing group
+ * @security bearerAuth
+ * @param {string} group_id.path.required - ID of the group
+ * @param {string} user_id.path.required - ID of the user to remove
+ * @returns {object} 200 - Success response - example: { success: true }
+ * @returns {object} 401 - Unauthorized - example: { msg: "Token is not valid" }
+ * @returns {object} 403 - Forbidden - example: { msg: "Cannot remove admin or user not authorized" }
+ * @returns {object} 404 - Not found - example: { msg: "Group or user not found" }
+ */
+router.delete('/:group_id/members/:user_id', auth, groupController.removeMember);
+
+module.exports = router;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ContributionRouter.html">ContributionRouter</a></li><li><a href="module-ExpenseRouter.html">ExpenseRouter</a></li><li><a href="module-GroupRouter.html">GroupRouter</a></li><li><a href="module-InvestmentRouter.html">InvestmentRouter</a></li><li><a href="module-ReportRouter.html">ReportRouter</a></li><li><a href="module-SettlementRouter.html">SettlementRouter</a></li><li><a href="module-StocksRouter.html">StocksRouter</a></li><li><a href="module-UsersRouter.html">UsersRouter</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Apr 05 2025 22:05:04 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
