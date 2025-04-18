@@ -9,6 +9,7 @@ import { MainLayout } from "./layouts/MainLayout";
 import { GroupDetails } from "./pages/GroupDetails";
 import { GroupInvestments } from "./pages/InvestmentPoolDetails";
 
+
 export function App() {
   // For mock data purposes, we'll assume the user is not logged in initially
   const [isLoggedIn, setIsLoggedIn] = useState(false);
